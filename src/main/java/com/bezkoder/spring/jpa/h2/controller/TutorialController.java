@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.bezkoder.spring.jpa.h2.model.Tutorial;
 import com.bezkoder.spring.jpa.h2.repository.TutorialRepository;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
@@ -21,16 +21,16 @@ public class TutorialController {
   @Autowired
   TutorialRepository tutorialRepository;
 
-
+  @CrossOrigin
   @GetMapping("/tutorials")
-  public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
+  public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String type) {
     try {
       List<Tutorial> tutorials = new ArrayList<Tutorial>();
 
-      if (title == null)
+      if (type == null)
         tutorialRepository.findAll().forEach(tutorials::add);
       else
-        tutorialRepository.findByTitleContainingIgnoreCase(title).forEach(tutorials::add);
+        tutorialRepository.findByTypeContainingIgnoreCase(type).forEach(tutorials::add);
 
       if (tutorials.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -41,7 +41,7 @@ public class TutorialController {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+  @CrossOrigin
   @GetMapping("/tutorials/{id}")
   public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") long id) {
     Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
@@ -52,32 +52,36 @@ public class TutorialController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-
+  @CrossOrigin
   @PostMapping("/tutorials")
   public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
     try {
-      Tutorial _tutorial = tutorialRepository.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
+      Tutorial _tutorial = tutorialRepository.save(new Tutorial(tutorial.getName(), tutorial.getPrice(), tutorial.getSalePrice(), tutorial.getSaleRate(),tutorial.getType(), tutorial.getImageURL(), false));
       return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+  @CrossOrigin
   @PutMapping("/tutorials/{id}")
   public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial tutorial) {
     Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
 
     if (tutorialData.isPresent()) {
       Tutorial _tutorial = tutorialData.get();
-      _tutorial.setTitle(tutorial.getTitle());
-      _tutorial.setDescription(tutorial.getDescription());
+      _tutorial.setName((tutorial.getName()));
+      _tutorial.setPrice((tutorial.getPrice()));
+      _tutorial.setSalePrice((tutorial.getSalePrice()));
+      _tutorial.setSaleRate((tutorial.getSaleRate()));
+      _tutorial.setType((tutorial.getType()));
+      _tutorial.setImageURL((tutorial.getImageURL()));
       _tutorial.setPublished(tutorial.isPublished());
       return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-
+  @CrossOrigin
   @DeleteMapping("/tutorials/{id}")
   public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
     try {
@@ -87,7 +91,7 @@ public class TutorialController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+  @CrossOrigin
   @DeleteMapping("/tutorials")
   public ResponseEntity<HttpStatus> deleteAllTutorials() {
     try {
@@ -98,7 +102,7 @@ public class TutorialController {
     }
 
   }
-
+  @CrossOrigin
   @GetMapping("/tutorials/published")
   public ResponseEntity<List<Tutorial>> findByPublished() {
     try {
@@ -112,5 +116,22 @@ public class TutorialController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+
+  @CrossOrigin
+  @GetMapping("/tutorials/type/{type}")
+  public ResponseEntity<List<Tutorial>> getTutorialByType(@PathVariable("type") String type) {
+    try {
+      List<Tutorial> tutorials = tutorialRepository.findByType(type);
+
+      if (tutorials.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+      return new ResponseEntity<>(tutorials, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 
 }

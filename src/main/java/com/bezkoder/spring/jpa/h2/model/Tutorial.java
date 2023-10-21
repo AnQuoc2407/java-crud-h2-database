@@ -10,11 +10,23 @@ public class Tutorial {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Column(name = "title")
-  private String title;
+  @Column(name = "name")
+  private String name;
 
-  @Column(name = "description")
-  private String description;
+  @Column(name = "price")
+  private String price;
+
+  @Column(name = "salePrice")
+  private String salePrice;
+
+  @Column(name = "saleRate")
+  private String saleRate;
+
+  @Column(name = "type")
+  private String type;
+
+  @Column(name = "imageURL")
+  private String imageURL;
 
   @Column(name = "published")
   private boolean published;
@@ -23,9 +35,21 @@ public class Tutorial {
 
   }
 
-  public Tutorial(String title, String description, boolean published) {
-    this.title = title;
-    this.description = description;
+  public String getSaleRate() {
+    return saleRate;
+  }
+
+  public void setSaleRate(String saleRate) {
+    this.saleRate = saleRate;
+  }
+
+  public Tutorial(String name, String price, String salePrice, String saleRate, String type, String imageURL, boolean published) {
+    this.name = name;
+    this.price = price;
+    this.salePrice = salePrice;
+    this.saleRate = saleRate;
+    this.type = type;
+    this.imageURL = imageURL;
     this.published = published;
   }
 
@@ -33,20 +57,44 @@ public class Tutorial {
     return id;
   }
 
-  public String getTitle() {
-    return title;
+  public String getName() {
+    return name;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public String getDescription() {
-    return description;
+  public String getPrice() {
+    return price;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setPrice(String price) {
+    this.price = price;
+  }
+
+  public String getSalePrice() {
+    return salePrice;
+  }
+
+  public void setSalePrice(String salePrice) {
+    this.salePrice = salePrice;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getImageURL() {
+    return imageURL;
+  }
+
+  public void setImageURL(String imageURL) {
+    this.imageURL = imageURL;
   }
 
   public boolean isPublished() {
@@ -59,7 +107,15 @@ public class Tutorial {
 
   @Override
   public String toString() {
-    return "Tutorial [id=" + id + ", title=" + title + ", desc=" + description + ", published=" + published + "]";
+    return "Tutorial{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", price='" + price + '\'' +
+            ", salePrice='" + salePrice + '\'' +
+            ", saleRate='" + saleRate + '\'' +
+            ", type='" + type + '\'' +
+            ", imageURL='" + imageURL + '\'' +
+            ", published=" + published +
+            '}';
   }
-
 }
