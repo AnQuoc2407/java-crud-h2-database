@@ -24,7 +24,7 @@ public class DataLoader implements CommandLineRunner {
 
     }
 
-     @Scheduled(fixedDelay = 3000)// Run every 5 seconds (5000 milliseconds)
+     @Scheduled(fixedDelay = 30000)// Run every 5 seconds (5000 milliseconds)
     public void loadDataPeriodically() {
         // Logic to execute periodically after a few seconds
         tutorialRepository.findByType("Sample Tutorial 1");
