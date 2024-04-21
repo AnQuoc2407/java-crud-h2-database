@@ -20,7 +20,7 @@ public class DataLoader implements CommandLineRunner {
 //        tutorialRepository.save(new Tutorial("Sample Tutorial 1", "Description 1", true));
 //        tutorialRepository.save(new Tutorial("Sample Tutorial 2", "Description 2", false));
 //        tutorialRepository.save(new Tutorial("Sample Tutorial 3", "Description 3", true));
-    tutorialRepository.save(new Tutorial("Sample Tutorial 1", "Description 1","Sample Tutorial 1", "Sample Tutorial 1","Sample Tutorial 1","Sample Tutorial 1",true));
+//    tutorialRepository.save(new Tutorial("Sample Tutorial 1", "Description 1","Sample Tutorial 1", "Sample Tutorial 1","Sample Tutorial 1","Sample Tutorial 1",true));
 
     }
 

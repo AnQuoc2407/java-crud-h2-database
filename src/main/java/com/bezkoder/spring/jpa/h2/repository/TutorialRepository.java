@@ -12,4 +12,6 @@ public interface TutorialRepository extends JpaRepository<Tutorial, Long> {
   List<Tutorial> findByTypeContainingIgnoreCase(String type);
 
   List<Tutorial> findByType(String type);
+
+  List<Tutorial> findByAuthor(String author);
 }

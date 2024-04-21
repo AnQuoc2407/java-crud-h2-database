@@ -22,15 +22,15 @@ public class TutorialController {
   TutorialRepository tutorialRepository;
 
   @CrossOrigin
-  @GetMapping("/tutorials")
+  @GetMapping("/books")
   public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String type) {
     try {
       List<Tutorial> tutorials = new ArrayList<Tutorial>();
 
       if (type == null)
-        tutorialRepository.findAll().forEach(tutorials::add);
+        tutorials.addAll(tutorialRepository.findAll());
       else
-        tutorialRepository.findByTypeContainingIgnoreCase(type).forEach(tutorials::add);
+        tutorials.addAll(tutorialRepository.findByTypeContainingIgnoreCase(type));
 
       if (tutorials.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -42,7 +42,7 @@ public class TutorialController {
     }
   }
   @CrossOrigin
-  @GetMapping("/tutorials/{id}")
+  @GetMapping("/books/{id}")
   public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") long id) {
     Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
 
@@ -53,23 +53,28 @@ public class TutorialController {
     }
   }
   @CrossOrigin
-  @PostMapping("/tutorials")
+  @PostMapping("/books")
   public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
     try {
-      Tutorial _tutorial = tutorialRepository.save(new Tutorial(tutorial.getName(), tutorial.getPrice(), tutorial.getSalePrice(), tutorial.getSaleRate(),tutorial.getType(), tutorial.getImageURL(), false));
+      Tutorial _tutorial = tutorialRepository.save(new Tutorial(tutorial.getName(), tutorial.getAuthor(), tutorial.getDescription(), tutorial.getRate(), tutorial.getLike(), tutorial.getContent(), tutorial.getPrice(), tutorial.getSalePrice(), tutorial.getSaleRate(), tutorial.getType(), tutorial.getImageURL(),  false, tutorial.getFormat(), tutorial.getPublishedDate()));
       return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   @CrossOrigin
-  @PutMapping("/tutorials/{id}")
+  @PutMapping("/books/{id}")
   public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial tutorial) {
     Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
 
     if (tutorialData.isPresent()) {
       Tutorial _tutorial = tutorialData.get();
       _tutorial.setName((tutorial.getName()));
+      _tutorial.setAuthor((tutorial.getAuthor()));
+      _tutorial.setDescription((tutorial.getDescription()));
+      _tutorial.setRate((tutorial.getRate()));
+      _tutorial.setLike((tutorial.getLike()));
+      _tutorial.setContent((tutorial.getContent()));
       _tutorial.setPrice((tutorial.getPrice()));
       _tutorial.setSalePrice((tutorial.getSalePrice()));
       _tutorial.setSaleRate((tutorial.getSaleRate()));
@@ -82,7 +87,7 @@ public class TutorialController {
     }
   }
   @CrossOrigin
-  @DeleteMapping("/tutorials/{id}")
+  @DeleteMapping("/books/{id}")
   public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
     try {
       tutorialRepository.deleteById(id);
@@ -92,7 +97,7 @@ public class TutorialController {
     }
   }
   @CrossOrigin
-  @DeleteMapping("/tutorials")
+  @DeleteMapping("/books")
   public ResponseEntity<HttpStatus> deleteAllTutorials() {
     try {
       tutorialRepository.deleteAll();
@@ -103,7 +108,7 @@ public class TutorialController {
 
   }
   @CrossOrigin
-  @GetMapping("/tutorials/published")
+  @GetMapping("/books/published")
   public ResponseEntity<List<Tutorial>> findByPublished() {
     try {
       List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
@@ -119,7 +124,7 @@ public class TutorialController {
 
 
   @CrossOrigin
-  @GetMapping("/tutorials/type/{type}")
+  @GetMapping("/books/type/{type}")
   public ResponseEntity<List<Tutorial>> getTutorialByType(@PathVariable("type") String type) {
     try {
       List<Tutorial> tutorials = tutorialRepository.findByType(type);
@@ -133,5 +138,18 @@ public class TutorialController {
     }
   }
 
+  @CrossOrigin
+  @GetMapping("/books/author/{author}")
+  public ResponseEntity<List<Tutorial>> getTutorialByAuthor(@PathVariable("author") String author) {
+    try {
+      List<Tutorial> tutorials = tutorialRepository.findByAuthor(author);
 
+      if (tutorials.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+      return new ResponseEntity<>(tutorials, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
